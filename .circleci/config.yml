@@ -1,25 +1,25 @@
 version: 2.1
 commands:
-  # install_awscli:
-  #   description: Install Aws CLI v2
-  #   steps:
-  #     - run:
-  #         name: Install Aws CLI v2
-  #         command: |
-  #           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-  #           unzip awscliv2.zip
-  #           sudo ./aws/install
+  install_awscli:
+    description: Install Aws CLI v2
+    steps:
+      - run:
+          name: Install Aws CLI v2
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
 
-  # install_ansible:
-  #   description: Install Ansible 
-  #   steps:
-  #     - run:
-  #         name: Install Ansible 
-  #         command: |
-  #           sudo apt update
-  #           sudo apt install software-properties-common --yes
-  #           sudo add-apt-repository --yes --update ppa:ansible/ansible --yes
-  #           sudo apt install ansible -y         
+  install_ansible:
+    description: Install Ansible 
+    steps:
+      - run:
+          name: Install Ansible 
+          command: |
+            sudo apt update
+            sudo apt install software-properties-common --yes
+            sudo add-apt-repository --yes --update ppa:ansible/ansible --yes
+            sudo apt install ansible -y         
 
   # install_nodejs:  #we will install nodejs 13
   #   description: Install Node.js 13
@@ -159,42 +159,42 @@ jobs:
             exit 0
             npm audit
 
-  # deploy-infrastructure:
-  #   docker:
-  #     - image: cimg/base:stable
-  #   steps:
-  #     - checkout
-  #     - install_awscli
-  #     - run:
-  #         name: Ensure back-end infrastructure exists
-  #         command: |
-  #           aws cloudformation deploy \
-  #             --template-file .circleci/files/backend.yml \
-  #             --tags project=udapeople \
-  #             --stack-name "backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-  #             --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
+  deploy-infrastructure:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - install_awscli
+      - run:
+          name: Ensure back-end infrastructure exists
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/backend.yml \
+              --tags project=udapeople \
+              --stack-name "backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
 
-  #     - run:
-  #         name: Ensure front-end infrastructure exist
-  #         command: |
-  #           aws cloudformation deploy \
-  #              --template-file .circleci/files/frontend.yml \
-  #              --tags project=udapeople \
-  #              --stack-name "frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
-  #              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+      - run:
+          name: Ensure front-end infrastructure exist
+          command: |
+            aws cloudformation deploy \
+               --template-file .circleci/files/frontend.yml \
+               --tags project=udapeople \
+               --stack-name "frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
 
-  #     - run:
-  #         name: Add back-end ip to ansible inventory
-  #         command: |
-  #           aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> .circleci/ansible/inventory.txt
-  #           cat .circleci/ansible/inventory.txt
+      - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+            aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> .circleci/ansible/inventory.txt
+            cat .circleci/ansible/inventory.txt
 
-  #     - persist_to_workspace:
-  #         root: ~/
-  #         paths:
-  #           - project/.circleci/ansible/inventory.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/ansible/inventory.txt
 
-  #     - destroy-environment
+      - destroy-environment
 
   # configure-infrastructure:
   #   docker:
@@ -203,7 +203,7 @@ jobs:
   #     - checkout
   #     - install_ansible
   #     - add_ssh_keys:
-  #         fingerprints: ["9b:1a:fe:5c:65:c9:70:eb:52:62:a9:fc:72:18:38:09"]
+  #         fingerprints: ["f4:b7:71:24:85:96:e1:dc:b3:12:c7:4e:7a:17:8d:33"]
   #     - attach_workspace:
   #         at: ~/
   #     - run:
@@ -282,7 +282,7 @@ jobs:
   #     - install_ansible
   #     - install_nodejs
   #     - add_ssh_keys:
-  #         fingerprints: ["9b:1a:fe:5c:65:c9:70:eb:52:62:a9:fc:72:18:38:09"]
+  #         fingerprints: ["f4:b7:71:24:85:96:e1:dc:b3:12:c7:4e:7a:17:8d:33"]
   #     - attach_workspace:
   #         at: ~/
   #     - restore_cache:
@@ -415,11 +415,11 @@ workflows:
           requires: [build-backend]
       - scan-frontend:
           requires: [build-frontend]
-      # - deploy-infrastructure:
-      #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      #     filters:
-      #       branches:
-      #         only: [master]
+      - deploy-infrastructure:
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          filters:
+            branches:
+              only: [master]
       # - configure-infrastructure:
       #     requires: [deploy-infrastructure]
       # - run-migrations:
