@@ -10,8 +10,6 @@ import { TransformInterceptor } from './modules/common/interceptors/TransformInt
 import * as express from 'express';
 import { ErrorFilter } from './modules/errors/error.filter';
 
-// console.log('hello from udapeople');
-
 async function bootstrap() {
   const logger = new AppLogger();
   logger.info(`NodeJs Version ${process.version}`);
@@ -28,7 +26,7 @@ async function bootstrap() {
     .setTitle('Glee2')
     .setDescription('Glee2 API')
     .setVersion('1.0')
-    .addTag('customTag') 
+    .addTag('customTag')
     .setBasePath(apiVersionPrefix)
     .addBearerAuth()
     .build();
