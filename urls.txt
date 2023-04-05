@@ -1,0 +1,9 @@
+1. Public Url to GitHub repository (not private) [URL01]
+
+	https://github.com/AmiraRagab/udapeople
+
+2. Public URL for your S3 Bucket (aka, your front-end). [URL02]
+	http://udapeople-273383e.s3.amazonaws.com/index.html#/employees
+        
+3. the current CloudFront URL03 used [URL03_SCREENSHOT]
+	http://d1doipf2depl94.cloudfront.net/#/employees
